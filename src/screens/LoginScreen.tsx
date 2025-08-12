@@ -8,6 +8,12 @@ import { InputComponent } from '../components/InputComponent';
 import { ButtonComponent } from '../components/ButtonComponent';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CommonActions, useNavigation } from '@react-navigation/native';
+import { User } from '../navigator/StackNavigator';
+
+//interface para las propiedades
+interface Props {
+    users: User[];  //arreglos con la lista de usuarios
+}
 
 //interface para el objeto del formulario
 interface FormLogin {
@@ -15,21 +21,7 @@ interface FormLogin {
     password: string;
 }
 
-//interface para los objetos de mi arreglo users
-interface User {
-    id: number;
-    name: string;
-    username: string;
-    password: string;
-}
-
-//arreglo con la lista de usuarios
-const users: User[] = [
-    { id: 1, name: 'Viviana Flores', username: 'vflores', password: '123456' },
-    { id: 2, name: 'Carlos Aguas', username: 'caguas', password: '654321' }
-];
-
-export const LoginScreen = () => {
+export const LoginScreen = ({ users }: Props) => {
     //hook useState para manejar el estado del formulario
     const [formLogin, setFormLogin] = useState<FormLogin>({
         username: '',
@@ -67,7 +59,8 @@ export const LoginScreen = () => {
             Alert.alert('Error', 'Usuario y/o contraseña incorrectos');
             return;
         }
-        console.log(formLogin);
+        //console.log(formLogin);
+        navigation.dispatch(CommonActions.navigate({ name: 'Home' }));
     }
 
     return (
@@ -94,7 +87,7 @@ export const LoginScreen = () => {
                         style={styles.iconForm}
                         onPress={() => setHiddenPassword(!hiddenPassword)} />
                 </View>
-                <ButtonComponent textButton='Iniciar' handleLogin={handleLogin} />
+                <ButtonComponent textButton='Iniciar' onPress={handleLogin} />
                 <TouchableOpacity
                     onPress={() => navigation.dispatch(CommonActions.navigate({ name: 'Register' }))}>
                     <Text style={styles.textRedirect}>
