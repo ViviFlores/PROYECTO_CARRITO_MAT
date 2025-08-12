@@ -3,7 +3,7 @@ import { LoginScreen } from '../screens/LoginScreen';
 import { PRIMARY_COLOR } from '../commons/constants';
 import { RegisterScreen } from '../screens/RegisterScreen';
 import { useState } from 'react';
-import { HomeScreen } from '../screens/HomeScreen';
+import { HomeScreen } from '../screens/HomeScreen/HomeScreen';
 
 //interface para los objetos de mi arreglo users
 export interface User {
@@ -22,7 +22,7 @@ const users: User[] = [
 const Stack = createStackNavigator();
 
 export const StackNavigator = () => {
-    //hook useState permitir gestionar el estado deñ arreglo de usuarios
+    //hook useState permitir gestionar el estado del arreglo de usuarios
     const [listUsers, setListUsers] = useState<User[]>(users);
 
     //función para agregar nuevos usuarios al arreglo (listUsers)
