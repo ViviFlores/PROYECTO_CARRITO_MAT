@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { FlatList, StatusBar, Text, View } from 'react-native';
-import { PRIMARY_COLOR } from '../../commons/constants';
+import { FlatList, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../../commons/constants';
 import { TitleComponent } from '../../components/TitleComponent';
 import { BodyComponent } from '../../components/BodyComponent';
 import { CardProduct } from './components/CardProduct';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { ModalCart } from './components/ModalCart';
 
 //interface para le arreglo de productos
 export interface Product {
@@ -15,7 +17,7 @@ export interface Product {
 }
 
 //interface para el arreglo carrito
-interface Cart {
+export interface Cart {
     id: number;
     name: string;
     price: number;
@@ -43,6 +45,9 @@ export const HomeScreen = () => {
 
     //hook useSate para controlar los productos del carrito
     const [cart, setCart] = useState<Cart[]>([]);  //arreglo con los productos seleccionados
+
+    //hook useState para manejar el estado del modal
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     //función para actualizar el stock
     const updateStock = (id: number, quantity: number): void => {
@@ -75,15 +80,25 @@ export const HomeScreen = () => {
 
         //Añadir en el carrito
         setCart([...cart, newProductCart]);
-        console.log(cart);
-        
+        //console.log(cart);
     }
 
 
     return (
         <View>
             <StatusBar backgroundColor={PRIMARY_COLOR} />
-            <TitleComponent title="Productos" />
+            <View style={styles.headerHome}>
+                <TitleComponent title="Productos" />
+                <View style={styles.containerIcon}>
+                    <Text style={styles.textIconCart}>
+                        {cart.length}
+                    </Text>
+                    <Icon name='shopping-cart'
+                        size={27}
+                        color={SECONDARY_COLOR}
+                        onPress={() => setShowModal(!showModal)} />
+                </View>
+            </View>
             <BodyComponent>
                 <FlatList
                     data={listProducts}
@@ -91,6 +106,29 @@ export const HomeScreen = () => {
                     keyExtractor={item => item.id.toString()}
                 />
             </BodyComponent>
+            <ModalCart visible={showModal}
+                setShowModal={() => setShowModal(!showModal)}
+                cart={cart} />
         </View>
+
     )
 }
+
+const styles = StyleSheet.create({
+    headerHome: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    containerIcon: {
+        flex: 1,
+        alignItems: 'flex-end',
+        paddingHorizontal: 30
+    },
+    textIconCart: {
+        backgroundColor: SECONDARY_COLOR, //blanco
+        paddingHorizontal: 5,
+        borderRadius: 25,
+        fontWeight: 'bold',
+        fontSize: 13
+    }
+})
